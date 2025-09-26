@@ -38,6 +38,8 @@ public class Transaction {
     @Column(name = "date")
     private LocalDateTime date;
 
+    private Integer walletId;
+
     public Integer getId() {
         return id;
     }
@@ -84,5 +86,13 @@ public class Transaction {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public Integer getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(Integer walletId) {
+        this.walletId = walletId;
     }
 }
