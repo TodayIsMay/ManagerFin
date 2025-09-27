@@ -1,8 +1,8 @@
 package com.example.Manager.services;
 
 import com.example.Manager.dto.TransactionDto;
+import com.example.Manager.entities.Aim;
 import com.example.Manager.entities.Transaction;
-import com.example.Manager.entities.Wallet;
 import com.example.Manager.repositories.TransactionRepository;
 import com.example.Manager.repositories.UserRepository;
 import jakarta.transaction.Transactional;
@@ -13,18 +13,20 @@ import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
-    private final TransactionRepository repository;
+    private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final WalletService walletService;
+    private final AimService aimService;
 
-    public TransactionService(TransactionRepository repository, UserRepository userRepository, WalletService walletService) {
-        this.repository = repository;
+    public TransactionService(TransactionRepository repository, UserRepository userRepository, WalletService walletService, AimService aimService) {
+        this.transactionRepository = repository;
         this.userRepository = userRepository;
         this.walletService = walletService;
+        this.aimService = aimService;
     }
 
     public List<Transaction> findAll() {
-        return repository.findAll();
+        return transactionRepository.findAll();
     }
 
     @Transactional
@@ -33,11 +35,12 @@ public class TransactionService {
         newTransaction.setWalletId(walletId);
 
         walletService.addTransaction(newTransaction, walletId);
-        return repository.save(newTransaction);
+        aimService.addTransaction(transactionDto.getAimId(), transactionDto);
+        return transactionRepository.save(newTransaction);
     }
 
     public List<TransactionDto> getWalletTransactions(Integer walletId) {
-        List<Transaction> walletTransactions = repository.getTransactionsByWalletId(walletId);
+        List<Transaction> walletTransactions = transactionRepository.getTransactionsByWalletId(walletId);
 
         return walletTransactions
             .stream()
@@ -51,6 +54,8 @@ public class TransactionService {
         transaction.setAmount(transactionDto.getAmount());
         transaction.setType(transactionDto.getType());
         transaction.setDate(transactionDto.getDate());
+        transaction.setWalletId(transaction.getWalletId());
+        transaction.setAimId(transactionDto.getAimId());
         return transaction;
     }
 
@@ -60,6 +65,7 @@ public class TransactionService {
             transaction.getUser().getUsername(),
             transaction.getAmount(),
             transaction.getType(),
-            transaction.getDate());
+            transaction.getDate(),
+            transaction.getAimId());
     }
 }

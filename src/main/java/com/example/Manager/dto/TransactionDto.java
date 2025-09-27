@@ -1,6 +1,7 @@
 package com.example.Manager.dto;
 
 import com.example.Manager.utils.TransactionType;
+import jakarta.annotation.Nullable;
 
 import java.time.LocalDateTime;
 
@@ -10,13 +11,15 @@ public class TransactionDto {
     private Double amount;
     private TransactionType type;
     private LocalDateTime date;
+    private Integer aimId;
 
-    public TransactionDto(Integer id, String username, Double amount, TransactionType type, LocalDateTime date) {
+    public TransactionDto(Integer id, String username, Double amount, TransactionType type, LocalDateTime date, @Nullable Integer aimId) {
         this.id = id;
         this.username = username;
         this.amount = amount;
         this.type = type;
         this.date = date;
+        this.aimId = aimId;
     }
 
     public Integer getId() {
@@ -57,5 +60,13 @@ public class TransactionDto {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public Integer getAimId() {
+        return aimId;
+    }
+
+    public void setAimId(Integer aimId) {
+        this.aimId = aimId;
     }
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -39,6 +40,8 @@ public class Transaction {
     private LocalDateTime date;
 
     private Integer walletId;
+
+    private Integer aimId;
 
     public Integer getId() {
         return id;
@@ -94,5 +97,13 @@ public class Transaction {
 
     public void setWalletId(Integer walletId) {
         this.walletId = walletId;
+    }
+
+    public Integer getAimId() {
+        return aimId;
+    }
+
+    public void setAimId(Integer aimId) {
+        this.aimId = aimId;
     }
 }
