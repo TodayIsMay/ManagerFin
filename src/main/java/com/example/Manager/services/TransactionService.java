@@ -39,6 +39,12 @@ public class TransactionService {
         return transactionRepository.save(newTransaction);
     }
 
+    public void delete(Integer transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow();
+        walletService.deleteTransactionFromWallet(transaction.getWalletId(), transaction);
+        transactionRepository.deleteById(transactionId);
+    }
+
     public List<TransactionDto> getWalletTransactions(Integer walletId) {
         List<Transaction> walletTransactions = transactionRepository.getTransactionsByWalletId(walletId);
 

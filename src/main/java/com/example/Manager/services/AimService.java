@@ -9,6 +9,9 @@ import com.example.Manager.repositories.UserRepository;
 import com.example.Manager.utils.TransactionType;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AimService {
     private final AimRepository aimRepository;
@@ -38,6 +41,13 @@ public class AimService {
         aimRepository.save(aim);
     }
 
+    public List<AimDto> getAllAims() {
+        return aimRepository.findAll()
+            .stream()
+            .map(AimService::mapToDto)
+            .collect(Collectors.toList());
+    }
+
     public Aim mapToEntity(AimDto aimDto) {
         Aim aim = new Aim();
 
@@ -46,5 +56,9 @@ public class AimService {
         aim.setTargetAmount(aimDto.targetAmount());
 
         return aim;
+    }
+
+    public static AimDto mapToDto(Aim aim) {
+        return new AimDto(aim.getName(), aim.getCurrentAmount(), aim.getTargetAmount());
     }
 }

@@ -45,6 +45,23 @@ public class WalletService {
         walletRepository.save(wallet);
     }
 
+    public void deleteTransactionFromWallet(Integer walletId, Transaction transaction) {
+        Wallet wallet = walletRepository.findById(walletId).orElseThrow();
+
+        Double initialAmount = wallet.getAmount();
+        double result;
+
+        if (transaction.getType() == TransactionType.EXPENSE) {
+            result = initialAmount + transaction.getAmount();
+        } else {
+            result = initialAmount - transaction.getAmount();
+        }
+
+        wallet.setAmount(result);
+
+        walletRepository.save(wallet);
+    }
+
     public static WalletDto mapToDto(Wallet wallet) {
         return new WalletDto(wallet.getId(), wallet.getName(), wallet.getAmount());
     }

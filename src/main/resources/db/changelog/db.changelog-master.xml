@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="initialTables" author="todayIsMay">
+        <createTable tableName="users">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="varchar(255)"/>
+        </createTable>
+        <createTable tableName="aims">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+            <column name="current_amount" type="float"/>
+            <column name="target_amount" type="float"/>
+            <column name="user_id" type="int">
+                <constraints foreignKeyName="aim_owner_id_user_id" references="users(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="wallets">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="wallet_name" type="varchar(255)"/>
+            <column name="amount" type="float"/>
+            <column name="owner_id" type="int">
+                <constraints foreignKeyName="wallet_owner_id_user_id" references="users(id)"/>
+            </column>
+        </createTable>
+        <createTable tableName="transactions">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="float"/>
+            <column name="transaction_type" type="int"/>
+            <column name="user_id" type="int">
+                <constraints foreignKeyName="transaction_user_id_user_id" references="users(id)"/>
+            </column>
+            <column name="wallet_id" type="int">
+                <constraints foreignKeyName="transaction_wallet_id_wallet_id" references="wallets(id)"/>
+            </column>
+            <column name="aim_id" type="int">
+                <constraints foreignKeyName="transaction_aim_id_aim_id" references="aims(id)"/>
+            </column>
+            <column name="creation_time" type="timestamp"/>
+            <column name="date" type="timestamp"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
