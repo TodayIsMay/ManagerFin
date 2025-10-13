@@ -27,6 +27,7 @@ public class WalletController {
 
     @PostMapping
     public void createWallet(@RequestBody WalletDto walletDto) {//todo: кошелек должен создаваться обычным пользователем только на себя, на других может создать админ
+        //TODO: после внедрения Security использовать для создания текущего пользователя
         walletService.createWallet(walletDto);
     }
 }

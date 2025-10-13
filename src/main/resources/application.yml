@@ -14,4 +14,7 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.xml
     enabled: true
-    drop-first: true
+    drop-first: false
+
+wallets:
+  initial-id: 1

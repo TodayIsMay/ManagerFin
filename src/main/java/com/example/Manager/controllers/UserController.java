@@ -1,15 +1,16 @@
 package com.example.Manager.controllers;
 
 import com.example.Manager.dto.UserDto;
-import com.example.Manager.entities.User;
 import com.example.Manager.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
 
@@ -18,7 +19,10 @@ public class UserController {
     }
 
     @PostMapping
-    public void create (@RequestBody UserDto userDto) {
-        userService.create(userDto);
+    public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) {
+        var createdUser = userService.create(userDto);
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(createdUser);
     }
 }

@@ -2,7 +2,10 @@ package com.example.Manager.services;
 
 import com.example.Manager.dto.UserDto;
 import com.example.Manager.entities.User;
+import com.example.Manager.exceptions.UserIsNotUniqueException;
 import com.example.Manager.repositories.UserRepository;
+import org.hibernate.NonUniqueObjectException;
+import org.postgresql.util.PSQLException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,10 +16,15 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void create(UserDto userDto) {
+    public synchronized UserDto create(UserDto userDto) {
         User user = new User();
         user.setUsername(userDto.getUsername());
-        userRepository.save(user);
+
+        if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+            throw new UserIsNotUniqueException("User with username " + userDto.getUsername() + " is already exists!");
+        }
+
+        return mapToDto(userRepository.save(user));
     }
 
     public User getUserByUsername(String username) {
@@ -28,6 +36,6 @@ public class UserService {
     }
 
     public UserDto mapToDto(User user) {
-        return new UserDto(user.getUsername());
+        return new UserDto(user.getId(), user.getUsername());
     }
 }

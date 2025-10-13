@@ -1,6 +1,7 @@
 package com.example.Manager.dto;
 
 import com.example.Manager.utils.TransactionType;
+import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 import java.time.LocalDateTime;
@@ -12,14 +13,23 @@ public class TransactionDto {
     private TransactionType type;
     private LocalDateTime date;
     private Integer aimId;
+    private Integer walletId;
 
-    public TransactionDto(Integer id, String username, Double amount, TransactionType type, LocalDateTime date, @Nullable Integer aimId) {
+    public TransactionDto(Integer id,
+        String username,
+        Double amount,
+        TransactionType type,
+        LocalDateTime date,
+        @Nullable Integer aimId,
+        @Nonnull Integer walletId)
+    {
         this.id = id;
         this.username = username;
         this.amount = amount;
         this.type = type;
         this.date = date;
         this.aimId = aimId;
+        this.walletId = walletId;
     }
 
     public Integer getId() {
@@ -68,5 +78,13 @@ public class TransactionDto {
 
     public void setAimId(Integer aimId) {
         this.aimId = aimId;
+    }
+
+    public Integer getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(Integer walletId) {
+        this.walletId = walletId;
     }
 }

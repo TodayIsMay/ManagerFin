@@ -52,4 +52,6 @@
             <column name="date" type="timestamp"/>
         </createTable>
     </changeSet>
+
+    <include file="changeFiles/addUniqueUsernameConstraint-changelog.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

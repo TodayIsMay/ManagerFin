@@ -1,10 +1,12 @@
 package com.example.Manager.services;
 
 import com.example.Manager.dto.TransactionDto;
-import com.example.Manager.entities.Aim;
 import com.example.Manager.entities.Transaction;
+import com.example.Manager.entities.User;
+import com.example.Manager.exceptions.FieldNotFoundException;
 import com.example.Manager.repositories.TransactionRepository;
 import com.example.Manager.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -30,12 +32,22 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction save(TransactionDto transactionDto, Integer walletId) {
+    public Transaction save(TransactionDto transactionDto) {
+        Integer walletId = transactionDto.getWalletId();
+
+        if (walletId == null) {
+            throw new FieldNotFoundException("Wallet ID is mandatory for transactions!");
+        }
+
         Transaction newTransaction = mapToEntity(transactionDto);
         newTransaction.setWalletId(walletId);
 
         walletService.addTransaction(newTransaction, walletId);
-        aimService.addTransaction(transactionDto.getAimId(), transactionDto);
+
+        if (transactionDto.getAimId() != null) {
+            aimService.addTransaction(transactionDto.getAimId(), transactionDto);
+        }
+
         return transactionRepository.save(newTransaction);
     }
 
@@ -55,8 +67,11 @@ public class TransactionService {
     }
 
     public Transaction mapToEntity(TransactionDto transactionDto) {
+        User user = userRepository.findByUsername(transactionDto.getUsername())
+            .orElseThrow(() -> new EntityNotFoundException("User with username " + transactionDto.getUsername() + " not found"));
+
         Transaction transaction = new Transaction();
-        transaction.setUser(userRepository.findByUsername((transactionDto.getUsername())).orElseThrow());
+        transaction.setUser(user);
         transaction.setAmount(transactionDto.getAmount());
         transaction.setType(transactionDto.getType());
         transaction.setDate(transactionDto.getDate());
@@ -72,6 +87,7 @@ public class TransactionService {
             transaction.getAmount(),
             transaction.getType(),
             transaction.getDate(),
-            transaction.getAimId());
+            transaction.getAimId(),
+            transaction.getWalletId());
     }
 }

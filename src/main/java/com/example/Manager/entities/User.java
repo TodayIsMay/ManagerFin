@@ -24,6 +24,14 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Transaction> transactions;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
